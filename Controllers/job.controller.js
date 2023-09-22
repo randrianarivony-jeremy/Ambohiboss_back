@@ -20,15 +20,21 @@ module.exports.jobQuery = async (req, res) => {
     })
     .lean();
 
-  let result = await jobModel
-    .find({
-      $text: { $search: req.query.query },
-    })
-    .lean();
-
-  //classification [ [ [a] [b] ] [ [c] [d] [e] ] ]
-  // queryResult = queryResult.map;
-  res.status(200).json({ queryResult, result });
+    let classifiedResult = [];
+    let i = 0;
+    while (queryResult.length > 0) {
+      classifiedResult.push([queryResult[0]]);
+      queryResult.shift();
+      for (let j = 0; j < queryResult.length; j++) {
+        if (queryResult[j].name.toLowerCase().match(classifiedResult[i][0].name.toLowerCase()) !== null) {
+          classifiedResult[i].push(queryResult[j]);
+          delete queryResult[j];
+        }
+      }
+      queryResult = queryResult.filter((a) => a !== "empty");
+      i++;
+    }
+    res.status(200).json(classifiedResult);
 };
 
 module.exports.autocomplete = async (req, res) => {
