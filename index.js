@@ -1,16 +1,18 @@
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
+import express, { json } from "express";
+import cors from "cors";
+import helmet from "helmet";
 
-require("dotenv").config({ path: "./config/.env" });
-require("./config/db.js");
+// require("dotenv").config({ path: "./config/.env" });
+import dotenv from "dotenv";
+dotenv.config({ path: "./config/.env" });
+import "./config/db.js";
 
-const connectDB = require("./config/db.js");
+import connectDB from "./config/db.js";
 
-const jobRoutes = require("./Routes/job.routes");
+import jobRoutes from "./Routes/job.routes.js";
 
 const app = express();
-app.use(express.json());
+app.use(json());
 
 connectDB();
 
@@ -26,7 +28,6 @@ app.use(cors(corsOptions));
 
 // //routes
 app.use("/api/job", jobRoutes);
-
 
 //server
 app.listen(process.env.PORT, () => {
