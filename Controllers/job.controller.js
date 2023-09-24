@@ -65,6 +65,11 @@ export const autocomplete = async (req, res) => {
   res.status(200).json(classifiedResult);
 };
 
+export const checkRecent = async (req, res) => {
+  const recents = await jobModel.find().limit(3).sort({ $natural: -1 }).lean();
+  res.status(200).json(recents);
+};
+
 export const generateData = async (req, res) => {
   const posts = [];
 
